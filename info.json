@@ -1,0 +1,9 @@
+{
+  "name": "simple-billboard",
+  "version": "0.1.0",
+  "title": "Simple Billboard",
+  "author": "imengyu",
+  "factorio_version": "1.1",
+  "dependencies": ["base >= 1.0"],
+  "description": "This mod adds a simple billboard like Minecraft that allow you to add custom text in your map."
+}
