@@ -2,13 +2,13 @@ require ("utils")
 require ("util")
 
 local name_wooden_billboard_gui_root = "billboard-gui"
-local name_wooden_billboard = "wooden-billboard"
+local name_wooden_billboard = "wooden--billboard"
 
 --Options
 -----------------------------------------------------------------
 
-max_chars = 128
-text_colors = {
+local max_chars = 512
+local text_colors = {
   white = {r=1,g=1,b=1},
   grey = {r=0.4,g=0.4,b=0.4},
   black = {r=0,g=0,b=0},
@@ -20,12 +20,24 @@ text_colors = {
   cyan = {r=0.3,g=0.8,b=0.7},
 }
 
+local function get_billboard_data()
+  if global.billboard_data == nil then global.billboard_data = {} end
+  return global.billboard_data
+end
+local function get_text_render_storage() 
+  if global.billboard_text_render_storage == nil then global.billboard_text_render_storage = {} end
+  return global.billboard_text_render_storage
+end
+local function get_singal_render_storag()
+  if global.billboard_singal_render_storage == nil then global.billboard_singal_render_storage = {} end
+  return global.billboard_singal_render_storage
+end
+
 --Data storage
 -----------------------------------------------------------------
 
 local function get_storage_billboard_data(entity) 
-  if global.billboard_data == nil then global.billboard_data = {} end
-  return global.billboard_data[entity.unit_number]
+  return get_billboard_data()[entity.unit_number]
 end
 local function storage_billboard_data(entity, newData) 
   if global.billboard_data == nil then global.billboard_data = {} end
@@ -45,7 +57,7 @@ local function create_billboard_default_data(entity)
     line_height = 10,
 
     sprite_orientation = 0,
-    sprite_offset = { x=-0, y=-0.2 },
+    sprite_offset = { x=-0, y=-0.7 },
     sprite_scale = 0.6,
     signal_str = '',
   }
@@ -68,10 +80,8 @@ end
 --Text renderer
 -----------------------------------------------------------------
 
-local text_render_storage = {}
-local singal_render_storage = {}
-
 local function destroy_text_render(entity) 
+  local text_render_storage = get_text_render_storage()
   local oldRender = text_render_storage[entity.unit_number]
   if oldRender ~= nil then
     if type(oldRender) == "table" then
@@ -83,9 +93,12 @@ local function destroy_text_render(entity)
     elseif rendering.is_valid(oldRender) then
       rendering.destroy(oldRender)
     end
+    text_render_storage[entity.unit_number] = nil
   end
 end
-local function create_text_render(entity, data) 
+local function create_text_render(entity, data)  
+  local text_render_storage = get_text_render_storage()
+
   if data == nil then return  end
   if text_render_storage[entity.unit_number] ~= nil then
     destroy_text_render(entity)
@@ -129,12 +142,14 @@ local function recreate_text_render(entity, data)
   create_text_render(entity, data)
 end
 local function destroy_singal_render(entity) 
+  local singal_render_storage = get_singal_render_storag()
   local oldRender = singal_render_storage[entity.unit_number]
   if oldRender ~= nil then
     rendering.destroy(oldRender)
   end
 end
 local function create_singal_render(entity, data) 
+  local singal_render_storage = get_singal_render_storag()
   if data == nil then return  end
   if singal_render_storage[entity.unit_number] ~= nil then
     destroy_singal_render(entity)
@@ -266,16 +281,16 @@ local function open_gui (player, entity)
   controls_flow_scale.add{type="slider", name="billboard-gui-scale-slider", value=data.scale * 100, minimum_value=30, maximum_value=300, value_step=10, style="notched_slider"}
 
   controls_flow_xoff.add{type="label", name="billboard-gui-xoff-label", caption={"billboard.gui.xoff-text"}, style="label"}
-  controls_flow_xoff.add{type="slider", name="billboard-gui-xoff-slider", value=data.offset.x * 100 + 50, minimum_value=0, maximum_value=100, value_step=5, style="notched_slider"}
+  controls_flow_xoff.add{type="slider", name="billboard-gui-xoff-slider", value=data.offset.x * 100 + 50, minimum_value=-200, maximum_value=200, value_step=5, style="notched_slider"}
 
   controls_flow_yoff.add{type="label", name="billboard-gui-yoff-label", caption={"billboard.gui.yoff-text"}, style="label"}
-  controls_flow_yoff.add{type="slider", name="billboard-gui-yoff-slider", value=data.offset.y * 100 + 100, minimum_value=0, maximum_value=100, value_step=5, style="notched_slider"}
+  controls_flow_yoff.add{type="slider", name="billboard-gui-yoff-slider", value=data.offset.y * 100 + 100, minimum_value=-200, maximum_value=200, value_step=5, style="notched_slider"}
 
   --controls_flow_align.add{type="label", name="billboard-gui-align-label", caption={"billboard.gui.align-text"}, style="label"}
   --controls_flow_align.add{type="slider", name="billboard-gui-align-slider", value=align_to_number(data.align), minimum_value=0, maximum_value=2, style="notched_slider"}
 
   controls_flow_orientation.add{type="label", name="billboard-gui-orientation-label", caption={"billboard.gui.orientation-text"}, style="label"}
-  controls_flow_orientation.add{type="slider", name="billboard-gui-orientation-slider", value=data.orientation * 100, minimum_value=0, maximum_value=100, value_step=10, style="notched_slider"}
+  controls_flow_orientation.add{type="slider", name="billboard-gui-orientation-slider", value=data.orientation * 100, minimum_value=0, maximum_value=100, value_step=5, style="notched_slider"}
   
   controls_flow_line_height.add{type="label", name="billboard-gui-line-height-label", caption={"billboard.gui.line-height-text"}, style="label"}
   controls_flow_line_height.add{type="slider", name="billboard-gui-line-height-slider", value=data.line_height, minimum_value=8, maximum_value=60, value_step=1, style="notched_slider"}
@@ -284,10 +299,10 @@ local function open_gui (player, entity)
   controls_flow_sprite_scale.add{type="slider", name="billboard-gui-sprite-scale-slider", value=data.sprite_scale * 100, minimum_value=30, maximum_value=300, value_step=10, style="notched_slider"}
 
   controls_flow_sprite_xoff.add{type="label", name="billboard-gui-sprite-xoff-label", caption={"billboard.gui.sprite-xoff-text"}, style="label"}
-  controls_flow_sprite_xoff.add{type="slider", name="billboard-gui-sprite-xoff-slider", value=data.sprite_offset.x * 100 + 50, minimum_value=0, maximum_value=100, value_step=5, style="notched_slider"}
+  controls_flow_sprite_xoff.add{type="slider", name="billboard-gui-sprite-xoff-slider", value=data.sprite_offset.x * 100 + 50, minimum_value=-200, maximum_value=210, value_step=10, style="notched_slider"}
 
   controls_flow_sprite_yoff.add{type="label", name="billboard-gui-sprite-yoff-label", caption={"billboard.gui.sprite-yoff-text"}, style="label"}
-  controls_flow_sprite_yoff.add{type="slider", name="billboard-gui-sprite-yoff-slider", value=data.sprite_offset.y * 100 + 100, minimum_value=0, maximum_value=100, value_step=5, style="notched_slider"}
+  controls_flow_sprite_yoff.add{type="slider", name="billboard-gui-sprite-yoff-slider", value=data.sprite_offset.y * 100 + 100, minimum_value=-200, maximum_value=210, value_step=10, style="notched_slider"}
 
   controls_flow_sprite_orientation.add{type="label", name="billboard-gui-sprite-orientation-label", caption={"billboard.gui.sprite-orientation-text"}, style="label"}
   controls_flow_sprite_orientation.add{type="slider", name="billboard-gui-sprite-orientation-slider", value=data.sprite_orientation * 100, minimum_value=0, maximum_value=100, value_step=10, style="notched_slider"}
@@ -305,7 +320,7 @@ local function on_gui_text_changed(event)
     if entity then
       if #event.element.text > max_chars then
         event.element.text = string.sub(event.element.text, 1, max_chars)
-        game.print("SimpleBillboard: Text are limited to "..max_chars.." in length.")
+        game.print("SimpleBillboard: Text length are limited to "..max_chars..".")
       end
 
       local data = get_storage_billboard_data(entity)
@@ -320,7 +335,7 @@ local function on_gui_text_changed(event)
 end
 local function on_gui_opened(event)
   if event.entity and event.entity.valid then
-      if event.entity.name == name_wooden_billboard then
+      if string.find(event.entity.name, name_wooden_billboard) ~= nil then
         global.players[event.player_index] = {
           input_text = nil
         }
@@ -452,8 +467,9 @@ function on_copy_paste_settings(event)
   local player_index = event.player_index
   if player_index and game.players[player_index] and game.players[player_index].connected 
   and event.source and event.source.valid and event.destination and event.destination.valid then
-    if not (event.source.name == name_wooden_billboard) then return end
-    if not (event.destination.name == name_wooden_billboard) then return end
+    if string.find(event.source.name, name_wooden_billboard) == nil then return end
+    if string.find(event.destination.name, name_wooden_billboard) == nil then return end
+
     local player = game.players[player_index]
     local source_data = util.table.deepcopy(get_storage_billboard_data(event.source))
     if source_data then
@@ -482,7 +498,7 @@ function on_player_setup_blueprint(event)
 
     -- Find any planetary teleporters in this blueprint
     for i, bp_entity in ipairs(entities) do
-      if bp_entity.name == name_wooden_billboard then
+      if string.find(bp_entity.name, name_wooden_billboard) ~= nil then
         local entity = mapping[i]
         if entity and entity.valid then
           local data = get_storage_billboard_data(entity)
@@ -526,7 +542,8 @@ local function on_entity_built(event)
   if event.created_entity and event.created_entity.valid then
     entity = event.created_entity
   end
-  if entity.name == name_wooden_billboard then
+  
+  if string.find(entity.name, name_wooden_billboard) ~= nil then
     local billboard_user_text_data = event.tags and event.tags.billboard_user_text_data or nil
     
     local data = billboard_user_text_data and Unserialize(billboard_user_text_data)
@@ -534,6 +551,7 @@ local function on_entity_built(event)
       data = create_billboard_default_data(entity)
     else
       storage_billboard_data(entity, data)
+
     end
     create_text_render(entity, data)
     create_singal_render(entity, data)
@@ -559,4 +577,7 @@ script.on_init(function ()
   global.players = {}
   global.selected = {} --Player_index -> entity reference
   global.billboard_data = {} -- create billboard_data in global
+  global.billboard_text_render_storage = {} -- create billboard_data in global
+  global.billboard_singal_render_storage = {} -- create billboard_data in global
 end)
+

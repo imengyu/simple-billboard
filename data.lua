@@ -33,7 +33,7 @@ styles["ugg_vertical_controls_flow"] = {
 styles["ugg_controls_textfield"] = {
   type = "textbox_style",
   width = 250,
-  height = 50
+  height = 100
 }
 
 styles["ugg_scroll_panel"] = {
@@ -44,3 +44,5 @@ styles["ugg_scroll_panel"] = {
   right_padding = 8,
   bottom_padding = 4
 }
+
+styles["notched_slider"].width = 300
