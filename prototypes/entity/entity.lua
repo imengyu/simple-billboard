@@ -42,7 +42,7 @@ data:extend({
           }
         },
         {
-          filename = "__simple-billboard__/graphics/entity/wooden-billboard/billboard-billboard-shadow.png",
+          filename = "__simple-billboard__/graphics/entity/wooden-billboard/wooden-billboard-shadow.png",
           priority = "extra-high",
           width = 32,
           height = 32,
@@ -100,7 +100,7 @@ data:extend({
           }
         },
         {
-          filename = "__simple-billboard__/graphics/entity/wooden-billboard/billboard-billboard-shadow-1x2.png",
+          filename = "__simple-billboard__/graphics/entity/wooden-billboard/wooden-billboard-shadow-1x2.png",
           priority = "extra-high",
           width = 62,
           height = 31,
@@ -158,7 +158,7 @@ data:extend({
           }
         },
         {
-          filename = "__simple-billboard__/graphics/entity/wooden-billboard/billboard-billboard-shadow-1x4.png",
+          filename = "__simple-billboard__/graphics/entity/wooden-billboard/wooden-billboard-shadow-1x4.png",
           priority = "extra-high",
           width = 124,
           height = 31,
@@ -216,7 +216,7 @@ data:extend({
           }
         },
         {
-          filename = "__simple-billboard__/graphics/entity/wooden-billboard/billboard-billboard-shadow-2x2.png",
+          filename = "__simple-billboard__/graphics/entity/wooden-billboard/wooden-billboard-shadow-2x2.png",
           priority = "extra-high",
           width = 62,
           height = 59,
@@ -274,10 +274,10 @@ data:extend({
           }
         },
         {
-          filename = "__simple-billboard__/graphics/entity/wooden-billboard/billboard-billboard-shadow-2x4.png",
+          filename = "__simple-billboard__/graphics/entity/wooden-billboard/wooden-billboard-shadow-2x4.png",
           priority = "extra-high",
-          width = 130,
-          height = 62,
+          width = 124,
+          height = 59,
           draw_as_shadow = true,
           shift = util.by_pixel(1, -2),
           hr_version =
@@ -332,7 +332,7 @@ data:extend({
           }
         },
         {
-          filename = "__simple-billboard__/graphics/entity/wooden-billboard/billboard-billboard-shadow-4x4.png",
+          filename = "__simple-billboard__/graphics/entity/wooden-billboard/wooden-billboard-shadow-4x4.png",
           priority = "extra-high",
           width = 124,
           height = 129,
