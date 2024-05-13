@@ -109,12 +109,13 @@ local function create_text_render(entity, data)
     local arr = Split(data.text, '\n')
     local currentOffset = 0
     local render_storage = {}
+    local radv = data.orientation * math.pi
     for k, v in pairs(arr) do      
       table.insert( render_storage, 0, rendering.draw_text{
         text = v,
         surface = entity.surface,
         target = entity,
-        target_offset = { data.offset.x, data.offset.y + currentOffset },
+        target_offset = { data.offset.x + currentOffset * math.cos(radv), data.offset.y + currentOffset * math.sin(radv) },
         color = data.color,
         scale = data.scale,
         align = data.align,
